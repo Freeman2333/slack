@@ -1,8 +1,10 @@
+import { useState } from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 import {
   Card,
@@ -29,6 +31,10 @@ interface SignInCardProps {
 }
 
 export const SignInCard = ({ setMode }: SignInCardProps) => {
+  const { signIn } = useAuthActions();
+
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -36,6 +42,14 @@ export const SignInCard = ({ setMode }: SignInCardProps) => {
       password: "",
     },
   });
+
+  const handleLogin = async (service: "github" | "google") => {
+    setIsPending(true);
+
+    signIn(service).finally(() => {
+      setIsPending(false);
+    });
+  };
 
   const onSubmit = (values: z.infer<typeof signinSchema>) => {
     console.log({ values });
@@ -77,15 +91,15 @@ export const SignInCard = ({ setMode }: SignInCardProps) => {
               )}
             />
 
-            <Button disabled={false} size="lg" className="w-full">
+            <Button disabled={isPending} size="lg" className="w-full">
               Continue
             </Button>
           </form>
         </Form>
         <Separator className="my-4" />
         <Button
-          // onClick={() => signUpWithGoogle()}
-          disabled={false}
+          onClick={() => handleLogin("google")}
+          disabled={isPending}
           variant="outline"
           size="lg"
           className="w-full"
@@ -94,8 +108,8 @@ export const SignInCard = ({ setMode }: SignInCardProps) => {
           Continue with Google
         </Button>
         <Button
-          disabled={false}
-          // onClick={() => signUpWithGithub()}
+          disabled={isPending}
+          onClick={() => handleLogin("github")}
           variant="outline"
           size="lg"
           className="w-full"
