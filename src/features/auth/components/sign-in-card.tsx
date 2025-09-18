@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { AuthFlow } from "../types";
+import { TriangleAlert } from "lucide-react";
 
 interface SignInCardProps {
   setMode: (mode: AuthFlow) => void;
@@ -33,6 +34,7 @@ interface SignInCardProps {
 export const SignInCard = ({ setMode }: SignInCardProps) => {
   const { signIn } = useAuthActions();
 
+  const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm<z.infer<typeof signinSchema>>({
@@ -52,7 +54,17 @@ export const SignInCard = ({ setMode }: SignInCardProps) => {
   };
 
   const onSubmit = (values: z.infer<typeof signinSchema>) => {
-    console.log({ values });
+    setIsPending(true);
+
+    signIn("password", {
+      email: values.email,
+      password: values.password,
+      flow: "signIn",
+    })
+      .catch(() => setError("Something went wrong."))
+      .finally(() => {
+        setIsPending(false);
+      });
   };
 
   return (
@@ -63,6 +75,12 @@ export const SignInCard = ({ setMode }: SignInCardProps) => {
           Use your email or another service to continue
         </CardDescription>
       </CardHeader>
+      {error && (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mx-7">
+          <TriangleAlert className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
       <CardContent className="p-7 space-y-4">
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>

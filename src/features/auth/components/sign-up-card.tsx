@@ -1,9 +1,11 @@
+import { useState } from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { TriangleAlert } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -22,12 +24,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 interface SignInCardProps {
   setMode: (mode: "sign-in" | "sign-up") => void;
 }
 
 export const SignUpCard = ({ setMode }: SignInCardProps) => {
+  const { signIn } = useAuthActions();
+
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -38,8 +46,27 @@ export const SignUpCard = ({ setMode }: SignInCardProps) => {
     },
   });
 
+  const handleLogin = async (service: "github" | "google") => {
+    setIsPending(true);
+
+    signIn(service).finally(() => {
+      setIsPending(false);
+    });
+  };
+
   const onSubmit = (values: z.infer<typeof signupSchema>) => {
-    console.log({ values });
+    setIsPending(true);
+
+    signIn("password", {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      flow: "signUp",
+    })
+      .catch(() => setError("Failed to create an account"))
+      .finally(() => {
+        setIsPending(false);
+      });
   };
 
   return (
@@ -50,6 +77,12 @@ export const SignUpCard = ({ setMode }: SignInCardProps) => {
           Use your email or another service to continue
         </CardDescription>
       </CardHeader>
+      {error && (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mx-7">
+          <TriangleAlert className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
       <CardContent className="p-7 pt-1 space-y-4">
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -106,15 +139,15 @@ export const SignUpCard = ({ setMode }: SignInCardProps) => {
               )}
             />
 
-            <Button disabled={false} size="lg" className="w-full">
+            <Button disabled={isPending} size="lg" className="w-full">
               Continue
             </Button>
           </form>
         </Form>
         <Separator className="my-4" />
         <Button
-          // onClick={() => signUpWithGoogle()}
-          disabled={false}
+          onClick={() => handleLogin("google")}
+          disabled={isPending}
           variant="outline"
           size="lg"
           className="w-full"
@@ -123,8 +156,8 @@ export const SignUpCard = ({ setMode }: SignInCardProps) => {
           Continue with Google
         </Button>
         <Button
-          disabled={false}
-          // onClick={() => signUpWithGithub()}
+          disabled={isPending}
+          onClick={() => handleLogin("github")}
           variant="outline"
           size="lg"
           className="w-full"
