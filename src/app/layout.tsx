@@ -1,8 +1,11 @@
+import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import ReactQueryProvider from "@/components/ui/react-query-provider";
+import { Modals } from "@/components/modals";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,7 +35,13 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <ConvexClientProvider>
+            <ReactQueryProvider>
+              <Toaster />
+              <Modals />
+              {children}
+            </ReactQueryProvider>
+          </ConvexClientProvider>
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>
