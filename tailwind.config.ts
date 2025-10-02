@@ -41,7 +41,7 @@ const config: Config = {
           foreground: "hsl(var(--destructive-foreground))",
         },
         brand: {
-          DEFAULT: "hsl(var(--brand))",
+          DEFAULT: "var(--brand)",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
