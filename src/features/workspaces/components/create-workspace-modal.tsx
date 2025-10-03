@@ -36,6 +36,7 @@ export const CreateWorkspaceModal = () => {
 
   const onSubmit = async (values: z.infer<typeof workspaceSchema>) => {
     await mutateAsync(values);
+    setIsOpen(false);
   };
 
   return (

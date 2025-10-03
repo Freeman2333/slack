@@ -9,7 +9,6 @@ const Toolbar = () => {
   const workspaceId = useWorkspaceId();
 
   const { isLoading, workspace } = useGetWorkspace({ id: workspaceId });
-  console.log({ workspace });
 
   return (
     <div className="flex bg-brand h-10 p-1.5">

@@ -1,3 +1,4 @@
+import { Sidebar } from "./sidebar";
 import Toolbar from "./toolbar";
 
 interface WorkspaceIdLayoutProps {
@@ -8,7 +9,10 @@ const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
   return (
     <div>
       <Toolbar />
-      {children}
+      <div className="h-[calc(100vh-40px)]">
+        <Sidebar />
+        {children}
+      </div>
     </div>
   );
 };
