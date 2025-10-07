@@ -6,6 +6,7 @@ import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import ReactQueryProvider from "@/components/ui/react-query-provider";
 import { Modals } from "@/components/modals";
+import { JotaiProvider } from "@/components/jotai-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,9 +38,11 @@ export default function RootLayout({
         >
           <ConvexClientProvider>
             <ReactQueryProvider>
-              <Toaster />
-              <Modals />
-              {children}
+              <JotaiProvider>
+                <Toaster />
+                <Modals />
+                {children}
+              </JotaiProvider>
             </ReactQueryProvider>
           </ConvexClientProvider>
         </body>
