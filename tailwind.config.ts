@@ -42,6 +42,7 @@ const config: Config = {
         },
         brand: {
           DEFAULT: "var(--brand)",
+          secondary: "var(--brand-secondary)",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

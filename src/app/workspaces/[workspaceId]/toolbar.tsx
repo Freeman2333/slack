@@ -1,5 +1,6 @@
 "use client";
 
+import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
@@ -24,9 +25,11 @@ const Toolbar = () => {
         </Button>
       </div>
       <div className="flex-1 flex justify-end">
-        <Button variant="transparent" className="h-7" size="iconSm">
-          <Info className="size-5 text-white" />
-        </Button>
+        <Hint>
+          <Button variant="transparent" className="h-7" size="iconSm">
+            <Info className="size-5 text-white" />
+          </Button>
+        </Hint>
       </div>
     </div>
   );

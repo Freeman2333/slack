@@ -60,12 +60,12 @@ export const get = query({
 
     for (const workspaceId of workspaceIds) {
       const workspace = await ctx.db.get(workspaceId);
+
       if (workspace) {
         workspaces.push(workspace);
       }
-
-      return workspaces;
     }
+    return workspaces;
   },
 });
 
