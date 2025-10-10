@@ -44,6 +44,7 @@ const config: Config = {
           DEFAULT: "var(--brand)",
           secondary: "var(--brand-secondary)",
         },
+        link: "var(--link-color)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

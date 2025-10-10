@@ -13,6 +13,7 @@
   --foreground: #171717;
   --brand: #481349;
   --brand-secondary: #5e2c5f;
+  --link-color: #1264a3;
 }
 
 @layer base {
