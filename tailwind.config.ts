@@ -45,6 +45,7 @@ const config: Config = {
           secondary: "var(--brand-secondary)",
         },
         link: "var(--link-color)",
+        sidebarTextColor: "var(--sidebar-text-color)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
