@@ -14,7 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
-import type * as channels from ../channels.jsjs";
+import type * as channels from "../channels.js";
 import type * as http from "../http.js";
 import type * as members from "../members.js";
 import type * as user from "../user.js";
