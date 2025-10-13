@@ -16,6 +16,7 @@ import { Channel } from "@/features/channels/types";
 import { useGetMembers } from "@/features/members/api/use-get-members";
 import { MemberWithUser } from "@/features/members/types";
 import { UserItem } from "./user-item";
+import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
 
 export const WorkspaceSidebar = () => {
   const workspaceId = useWorkspaceId();
@@ -30,7 +31,8 @@ export const WorkspaceSidebar = () => {
   const { isLoading: isLoadingMembers, members } = useGetMembers({
     id: workspaceId,
   });
-  console.log({ members });
+
+  const [_isOpen, setIsChannelModalOpen] = useCreateChannelModal();
 
   if (
     isLoadingMember ||
@@ -61,7 +63,15 @@ export const WorkspaceSidebar = () => {
         <SidebarItem label="Threads" icon={MessageSquareText} id="threads" />
         <SidebarItem label="Drafts & Sent" icon={SendHorizonal} id="drafts" />
       </div>
-      <WorkspaceSection label="Channels" hint="New channel" onNew={() => {}}>
+      <WorkspaceSection
+        label="Channels"
+        hint="New channel"
+        onNew={
+          member.role === "admin"
+            ? () => setIsChannelModalOpen(true)
+            : undefined
+        }
+      >
         {channels?.map((item: Channel) => (
           <SidebarItem
             key={item._id}

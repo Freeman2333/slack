@@ -22,7 +22,7 @@ export const WorkspaceSection = ({
   const [on, toggle] = useToggle(true);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mb-5">
       <div className="flex items-center justify-start group px-3">
         <Button variant="transparent" onClick={toggle} className="p-0.5 size-6">
           <FaCaretDown
