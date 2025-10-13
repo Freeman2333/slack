@@ -11,44 +11,56 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Settings, SquarePen } from "lucide-react";
 import { PreferenceModal } from "./preference-modal";
+import { InviteModal } from "./invite-modal";
+import { Doc } from "../../../../convex/_generated/dataModel";
 
 interface WorkspaceHeaderProps {
-  name: string;
+  workspace: Doc<"workspaces">;
 }
 
-const WorkspaceHeader = ({ name }: WorkspaceHeaderProps) => {
+const WorkspaceHeader = ({ workspace }: WorkspaceHeaderProps) => {
   const [preferenceModalIsOpen, setPreferenceModalIsOpen] = useState(false);
+  const [inviteModalIsOpen, setInviteModalIsOpen] = useState(false);
 
   return (
     <>
       <PreferenceModal
-        workspaceName={name}
+        workspaceName={workspace.name}
         isOpen={preferenceModalIsOpen}
         setPreferenceModalIsOpen={setPreferenceModalIsOpen}
+      />
+      <InviteModal
+        isOpen={inviteModalIsOpen}
+        workspaceName={workspace.name}
+        joinCode={workspace.joinCode}
+        setPreferenceModalIsOpen={setInviteModalIsOpen}
       />
       <div className="flex items-center">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button className="font-bold text-lg" variant="transparent">
-              {name}
+              {workspace?.name}
               <ChevronDown className="size-5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="start" className="w-60">
             <DropdownMenuItem className="cursor-pointer flex justify-start items-start capitalize">
               <div className="size-9 bg-[#616061] text-white rounded-md flex items-center justify-center text-lg font-bold">
-                {name?.charAt(0)?.toUpperCase() ?? "W"}
+                {workspace?.name?.charAt(0)?.toUpperCase() ?? "W"}
               </div>
               <div className="flex flex-col justify-start items-start">
-                <span className="font-bold">{name}</span>
+                <span className="font-bold">{workspace?.name}</span>
                 <span className="text-xs text-muted-foreground">
                   Active workspace
                 </span>
               </div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer flex-col justify-start items-start">
-              Invite people to {name}
+            <DropdownMenuItem
+              className="cursor-pointer flex-col justify-start items-start"
+              onClick={() => setInviteModalIsOpen(true)}
+            >
+              Invite people to {workspace?.name}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
