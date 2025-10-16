@@ -33,10 +33,7 @@ const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={75}>
             <div className="flex h-full items-center justify-center p-6">
-              <span className="font-semibold">
-                Content
-                {children}
-              </span>
+              <span className="font-semibold">{children}</span>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>

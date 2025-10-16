@@ -42,7 +42,7 @@ export const SidebarItem = ({
       variant="transparent"
     >
       <Link
-        href={`/workspace/${workspaceId}/channel/${id}`}
+        href={`/workspaces/${workspaceId}/channels/${id}`}
         className="flex gap-2 items-center w-full"
       >
         <Icon className="size-3.5" />
