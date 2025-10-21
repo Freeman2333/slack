@@ -46,6 +46,7 @@ const config: Config = {
         },
         link: "var(--link-color)",
         sidebarTextColor: "var(--sidebar-text-color)",
+        lighGreen: "var(--light-green)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
