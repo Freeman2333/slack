@@ -14,6 +14,7 @@ import { PiTextAa } from "react-icons/pi";
 import { ImageIcon, Smile } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MdSend } from "react-icons/md";
+import { EmojiPopover } from "./emoji-popover";
 
 type EditorValue = {
   image: File | null;
@@ -141,6 +142,12 @@ const Editor = ({
     }
   };
 
+  const handleEmojiSelect = (emoji: any) => {
+    const quill = quillRef.current;
+
+    quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
@@ -158,16 +165,11 @@ const Editor = ({
               <PiTextAa className="size-4" />
             </Button>
           </Hint>
-          <Hint label="Emoji">
-            <Button
-              disabled={disabled}
-              size="sm"
-              variant="ghost"
-              onClick={() => null}
-            >
+          <EmojiPopover onEmojiSelect={handleEmojiSelect}>
+            <Button disabled={disabled} size="sm" variant="ghost">
               <Smile className="size-4" />
             </Button>
-          </Hint>
+          </EmojiPopover>
           {variant === "create" && (
             <Hint label="Image">
               <Button
@@ -203,7 +205,7 @@ const Editor = ({
           )}
           {variant === "create" && (
             <Button
-              // disabled={disabled || isEmpty}
+              disabled={disabled || isEmpty}
               onClick={() => null}
               className={cn(
                 "ml-auto",
@@ -218,11 +220,18 @@ const Editor = ({
           )}
         </div>
       </div>
-      <div className="p-2 text-[10px] text-muted-foreground flex justify-end">
-        <p>
-          <strong>Shift + Return</strong> to add new line
-        </p>
-      </div>
+      {variant === "create" && (
+        <div
+          className={cn(
+            "p-2 text-[10px] text-muted-foreground flex justify-end opacity-0 transition",
+            !isEmpty && "opacity-100"
+          )}
+        >
+          <p>
+            <strong>Shift + Return</strong> to add new line
+          </p>
+        </div>
+      )}
     </div>
   );
 };
