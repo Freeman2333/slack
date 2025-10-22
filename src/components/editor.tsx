@@ -6,12 +6,14 @@ import {
   useRef,
   useState,
 } from "react";
+import Image from "next/image";
 import Quill, { Delta, Op, QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
+
 import { Hint } from "./hint";
 import { Button } from "./ui/button";
 import { PiTextAa } from "react-icons/pi";
-import { ImageIcon, Smile } from "lucide-react";
+import { ImageIcon, Smile, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MdSend } from "react-icons/md";
 import { EmojiPopover } from "./emoji-popover";
@@ -41,11 +43,13 @@ const Editor = ({
   onSubmit,
 }: EditorProps) => {
   const [text, setText] = useState("");
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const isEmpty = useMemo(
     () => text.replace("/s*/g", "").trim().length === 0,
     [text]
   );
-  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const onSubmitRef = useRef(onSubmit);
@@ -53,6 +57,7 @@ const Editor = ({
   const quillRef = useRef<Quill | null>(null);
   const defaultValueRef = useRef(defaultValue);
   const disabledRef = useRef(disabled);
+  const imageRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
     onSubmitRef.current = onSubmit;
@@ -148,10 +153,45 @@ const Editor = ({
     quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setImageFile(file || null);
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
         <div ref={containerRef} className="h-full ql-custom" />
+        {!!imageFile && (
+          <div className="p-2">
+            <div className="size-[62px] relative group/image flex items-center justify-center">
+              <Hint label="Remove image">
+                <button
+                  onClick={() => {
+                    setImageFile(null);
+                    imageRef.current!.value = "";
+                  }}
+                  className="size-6 hidden group-hover/image:flex absolute -top-2.5 -right-2.5 z-10 bg-black/70 rounded-full p-1 text-white hover:bg-black border-2 border-white justify-center items-center"
+                >
+                  <XIcon className="size-3.5" />
+                </button>
+              </Hint>
+              <Image
+                src={URL.createObjectURL(imageFile)}
+                alt="Logo"
+                fill
+                className="object-cover overflow-hidden rounded-xl"
+              />
+            </div>
+          </div>
+        )}
+        <input
+          className="hidden"
+          accept=".jpg, .png, .jpeg, .svg"
+          type="file"
+          ref={imageRef}
+          onChange={handleImageChange}
+        />
         <div className="flex px-2 pb-2 z-[5]">
           <Hint
             label={isToolbarVisible ? "Hide formatting" : "Show formatting"}
@@ -176,7 +216,7 @@ const Editor = ({
                 disabled={disabled}
                 size="sm"
                 variant="ghost"
-                onClick={() => null}
+                onClick={() => imageRef.current?.click()}
               >
                 <ImageIcon className="size-4" />
               </Button>
