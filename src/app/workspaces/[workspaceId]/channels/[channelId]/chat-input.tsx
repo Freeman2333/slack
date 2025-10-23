@@ -4,6 +4,8 @@ import Quill from "quill";
 import { useCreateMessage } from "@/features/messages/api/use-create-message";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useChannelId } from "@/features/channels/hooks/use-workspace-id";
+import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-url";
+import { toast } from "sonner";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -17,8 +19,10 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   const channelId = useChannelId();
 
   const [editorKey, setEditorKey] = useState(0);
+  const [isPending, setIsPending] = useState(false);
 
-  const { mutateAsync, isPending } = useCreateMessage();
+  const { mutateAsync: createMessage } = useCreateMessage();
+  const { mutateAsync: generateUploadUrl } = useGenerateUploadUrl();
 
   const handleSubmit = async ({
     body,
@@ -27,13 +31,40 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     body: string;
     image: File | null;
   }) => {
-    await mutateAsync({
-      body,
-      // image,
-      channelId,
-      workspaceId,
-    });
-    setEditorKey((prev) => prev + 1);
+    try {
+      setIsPending(true);
+      editorRef.current?.enable(false);
+      let storageId;
+
+      if (image) {
+        const postUrl = await generateUploadUrl({});
+
+        const result = await fetch(postUrl, {
+          method: "POST",
+          headers: { "Content-Type": image!.type },
+          body: image,
+        });
+
+        if (!result.ok) {
+          toast.error("Failed to upload image.");
+        }
+
+        const uploadResult = await result.json();
+        storageId = uploadResult.storageId;
+      }
+
+      await createMessage({
+        body,
+        ...((image && { image: storageId }) || {}),
+        channelId,
+        workspaceId,
+      });
+    } catch (error) {
+      toast.error("Failed to send message.");
+    } finally {
+      setIsPending(false);
+      setEditorKey((prev) => prev + 1);
+    }
   };
 
   return (
