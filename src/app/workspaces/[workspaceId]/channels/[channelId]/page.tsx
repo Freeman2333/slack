@@ -5,11 +5,14 @@ import { ChannelHeader } from "./header";
 import { useChannelId } from "@/features/channels/hooks/use-workspace-id";
 import { Loader } from "lucide-react";
 import { ChatInput } from "./chat-input";
+import { useGetMessages } from "@/features/messages/api/use-get-messages";
 
 const ChannelPage = () => {
   const channelId = useChannelId();
 
   const { channel, isLoading } = useGetChannel({ channelId });
+  const { results, status } = useGetMessages({ channelId });
+  console.log({ results, status });
 
   if (isLoading)
     return (
