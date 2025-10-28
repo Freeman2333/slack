@@ -2,6 +2,7 @@ import { isToday, isYesterday, format, differenceInMinutes } from "date-fns";
 
 import { api } from "../../convex/_generated/api";
 import { Message } from "./message";
+import { ChannelHero } from "./channel-hero";
 
 interface MessageListProps {
   memberName?: string;
@@ -88,6 +89,9 @@ export const MessageList = ({
           })}
         </div>
       ))}
+      {variant === "channel" && channelName && channelCreationTime && (
+        <ChannelHero name={channelName} creationTime={channelCreationTime} />
+      )}
     </div>
   );
 };
