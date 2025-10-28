@@ -5,12 +5,16 @@ import { Hint } from "./hint";
 import { Doc, Id } from "../../convex/_generated/dataModel";
 import { Thumbnail } from "./thumbnail";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Toolbar } from "./toolbar";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 
 interface MessageProps {
   id: Id<"messages">;
   isCompact?: boolean;
+  isEditing?: boolean;
+  isAuthor: boolean;
+  setEditingId: (id: Id<"messages"> | null) => void;
   body: Doc<"messages">["body"];
   createdAt: Doc<"messages">["_creationTime"];
   updatedAt: Doc<"messages">["updatedAt"];
@@ -27,6 +31,7 @@ const formatFullTime = (date: number) => {
 };
 
 export const Message = ({
+  id,
   isCompact,
   body,
   createdAt,
@@ -34,6 +39,9 @@ export const Message = ({
   messageImage,
   userImage,
   userName,
+  setEditingId,
+  isEditing,
+  isAuthor,
 }: MessageProps) => {
   const avatarFallback = userName?.charAt(0).toUpperCase() ?? "U";
 
@@ -55,7 +63,7 @@ export const Message = ({
       </div>
     );
   return (
-    <div className="p-1.5 px-5 hover:bg-gray-100/60 flex items-start gap-2 text-sm">
+    <div className="relative group p-1.5 px-5 hover:bg-gray-100/60 flex items-start gap-2 text-sm">
       <button>
         <Avatar>
           <AvatarImage src={userImage} />
@@ -82,6 +90,17 @@ export const Message = ({
           <span className="text-xs text-muted-foreground">(edited)</span>
         ) : null}
       </div>
+      {!isEditing && (
+        <Toolbar
+          isAuthor={isAuthor}
+          isPending={false}
+          hideThreadButton={false}
+          onEdit={() => setEditingId(id)}
+          onThread={() => null}
+          onDelete={() => null}
+          onReaction={() => null}
+        />
+      )}
     </div>
   );
 };

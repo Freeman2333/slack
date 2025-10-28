@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { isToday, isYesterday, format, differenceInMinutes } from "date-fns";
 
 import { api } from "../../convex/_generated/api";
 import { Message } from "./message";
 import { ChannelHero } from "./channel-hero";
+import { Id } from "../../convex/_generated/dataModel";
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { useCurrentMember } from "@/features/members/api/use-current-member";
 
 interface MessageListProps {
   memberName?: string;
@@ -38,6 +42,12 @@ export const MessageList = ({
   variant = "channel",
   loadMore,
 }: MessageListProps) => {
+  const workspaceId = useWorkspaceId();
+
+  const { member } = useCurrentMember(workspaceId);
+
+  const [editingId, setEditingId] = useState<Id<"messages"> | null>(null);
+
   const groupedMessages = data?.reduce(
     (groups, message) => {
       const date = new Date(message._creationTime);
@@ -84,6 +94,9 @@ export const MessageList = ({
                 userImage={message.user.image}
                 userName={message.user.name!}
                 isCompact={isCompact}
+                isAuthor={message.memberId === member?._id}
+                isEditing={editingId === message._id}
+                setEditingId={setEditingId}
               />
             );
           })}
