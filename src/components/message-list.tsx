@@ -1,6 +1,7 @@
-import { isToday, isYesterday, format } from "date-fns";
+import { isToday, isYesterday, format, differenceInMinutes } from "date-fns";
 
 import { api } from "../../convex/_generated/api";
+import { Message } from "./message";
 
 interface MessageListProps {
   memberName?: string;
@@ -13,6 +14,17 @@ interface MessageListProps {
   isLoadingMore: boolean;
   loadMore: () => void;
 }
+
+const TIME_THRESHOLD = 5;
+
+const formatDateLabel = (dateStr: string) => {
+  const date = new Date(dateStr);
+
+  if (isToday(date)) return "Today";
+  if (isYesterday(date)) return "Yesterday";
+
+  return format(date, "EEEE, MMMM d");
+};
 
 export const MessageList = ({
   canLoadMore,
@@ -39,15 +51,6 @@ export const MessageList = ({
     {} as Record<string, typeof data>
   );
 
-  const formatDateLabel = (dateStr: string) => {
-    const date = new Date(dateStr);
-
-    if (isToday(date)) return "Today";
-    if (isYesterday(date)) return "Yesterday";
-
-    return format(date, "EEEE, MMMM d");
-  };
-
   return (
     <div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto messages-scrollbar">
       {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
@@ -58,6 +61,31 @@ export const MessageList = ({
               {formatDateLabel(dateKey)}
             </span>
           </div>
+          {messages.map((message, index) => {
+            const prevMessage = messages[index - 1];
+
+            const isCompact =
+              prevMessage &&
+              prevMessage.user?._id === message.user?._id &&
+              differenceInMinutes(
+                new Date(message._creationTime),
+                new Date(prevMessage._creationTime)
+              ) < TIME_THRESHOLD;
+
+            return (
+              <Message
+                id={message._id}
+                key={message._id}
+                body={message.body}
+                createdAt={message._creationTime}
+                updatedAt={message.updatedAt}
+                messageImage={message.image}
+                userImage={message.user.image}
+                userName={message.user.name!}
+                isCompact={isCompact}
+              />
+            );
+          })}
         </div>
       ))}
     </div>

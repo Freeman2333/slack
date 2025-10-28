@@ -111,7 +111,6 @@ export const create = mutation({
       workspaceId: args.workspaceId,
       conversationId: _conversationId,
       parentMessageId: args.parentMessageId,
-      updatedAt: Date.now(),
     });
 
     return messageId;
