@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 import { useUpdateMessage } from "@/features/messages/api/use-update-message";
 import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
+import { Reactions } from "./reactions";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -26,6 +28,12 @@ interface MessageProps {
   messageImage?: string | null;
   userName: string;
   userImage?: string;
+  reactions: Array<
+    Omit<Doc<"reactions">, "memberId"> & {
+      count: number;
+      memberIds: Id<"members">[];
+    }
+  >;
 }
 
 const formatFullTime = (date: number) => {
@@ -47,6 +55,7 @@ export const Message = ({
   setEditingId,
   isEditing,
   isAuthor,
+  reactions,
 }: MessageProps) => {
   const avatarFallback = userName?.charAt(0).toUpperCase() ?? "U";
   const [ConfirmDialog, confirm] = useConfirm(
@@ -58,6 +67,11 @@ export const Message = ({
     useUpdateMessage();
   const { mutateAsync: removeMessage, isPending: isRemovingMessage } =
     useRemoveMessage();
+  const { mutateAsync: toggleReaction, isPending: isTogglingReaction } =
+    useToggleReaction();
+
+  const isPending =
+    isUpdatingMessage || isRemovingMessage || isTogglingReaction;
 
   const handleSubmit = async ({ body }: { body: string }) => {
     await updateMessage({
@@ -74,6 +88,13 @@ export const Message = ({
     if (!ok) return;
 
     await removeMessage({ id });
+  };
+
+  const handleReaction = async (reaction: string) => {
+    await toggleReaction({
+      messageId: id,
+      value: reaction,
+    });
   };
 
   if (isCompact)
@@ -110,17 +131,18 @@ export const Message = ({
               {updatedAt && (
                 <span className="text-muted-foreground text-xs">(edited)</span>
               )}
+              <Reactions data={reactions} onReaction={handleReaction} />
             </div>
           )}
           {!isEditing && (
             <Toolbar
               isAuthor={isAuthor}
-              isPending={isUpdatingMessage || isRemovingMessage}
+              isPending={isPending}
               hideThreadButton={false}
               onEdit={() => setEditingId(id)}
               onThread={() => null}
               onDelete={handleRemove}
-              onReaction={() => null}
+              onReaction={handleReaction}
             />
           )}
         </div>
@@ -170,19 +192,22 @@ export const Message = ({
           <Renderer body={body} />
         )}
         {messageImage && !isEditing && <Thumbnail imageUrl={messageImage} />}
-        {updatedAt ? (
-          <span className="text-xs text-muted-foreground">(edited)</span>
-        ) : null}
+        {updatedAt
+          ? !isEditing && (
+              <span className="text-xs text-muted-foreground">(edited)</span>
+            )
+          : null}
+        <Reactions data={reactions} onReaction={handleReaction} />
       </div>
       {!isEditing && (
         <Toolbar
           isAuthor={isAuthor}
-          isPending={isUpdatingMessage || isRemovingMessage}
+          isPending={isPending}
           hideThreadButton={false}
           onEdit={() => setEditingId(id)}
           onThread={() => null}
           onDelete={handleRemove}
-          onReaction={() => null}
+          onReaction={handleReaction}
         />
       )}
     </div>

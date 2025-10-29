@@ -97,6 +97,7 @@ export const MessageList = ({
                 isAuthor={message.memberId === member?._id}
                 isEditing={editingId === message._id}
                 setEditingId={setEditingId}
+                reactions={message.reactions}
               />
             );
           })}
