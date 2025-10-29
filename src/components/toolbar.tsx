@@ -18,6 +18,8 @@ export const Toolbar = ({
   hideThreadButton,
   isPending,
   isAuthor,
+  onEdit,
+  onDelete,
 }: ToolbarProps) => {
   return (
     <div className="absolute flex top-0 right-5 opacity-0 group-hover:opacity-100 transition-opacity border rounded-md bg-white shadow-sm">
@@ -38,14 +40,24 @@ export const Toolbar = ({
       )}
       {isAuthor && (
         <Hint label="Edit message">
-          <Button size="iconSm" variant="ghost" disabled={isPending}>
+          <Button
+            onClick={onEdit}
+            size="iconSm"
+            variant="ghost"
+            disabled={isPending}
+          >
             <Pencil className="size-4" />
           </Button>
         </Hint>
       )}
       {isAuthor && (
         <Hint label="Delete message">
-          <Button size="iconSm" variant="ghost" disabled={isPending}>
+          <Button
+            onClick={onDelete}
+            size="iconSm"
+            variant="ghost"
+            disabled={isPending}
+          >
             <Trash className="size-4" />
           </Button>
         </Hint>

@@ -256,7 +256,7 @@ const Editor = ({
                   })
                 }
                 disabled={disabled || isEmpty}
-                className="bg-lighGreen hover:bg-lighGreen/80 text-white"
+                className="bg-lighGreen hover:bg-lighGreen/70 text-white hover:text-white"
               >
                 Save
               </Button>
