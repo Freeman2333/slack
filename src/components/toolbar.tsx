@@ -20,6 +20,7 @@ export const Toolbar = ({
   isAuthor,
   onEdit,
   onDelete,
+  onThread,
 }: ToolbarProps) => {
   return (
     <div className="absolute flex top-0 right-5 opacity-0 group-hover:opacity-100 transition-opacity border rounded-md bg-white shadow-sm">
@@ -33,7 +34,12 @@ export const Toolbar = ({
       </EmojiPopover>
       {!hideThreadButton && (
         <Hint label="Reply in thread">
-          <Button size="iconSm" variant="ghost" disabled={isPending}>
+          <Button
+            onClick={onThread}
+            size="iconSm"
+            variant="ghost"
+            disabled={isPending}
+          >
             <MessageSquareTextIcon className="size-4" />
           </Button>
         </Hint>

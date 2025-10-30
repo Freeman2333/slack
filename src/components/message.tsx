@@ -12,6 +12,7 @@ import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
 import { Reactions } from "./reactions";
+import { usePanel } from "@/hooks/use-panel";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -20,6 +21,7 @@ interface MessageProps {
   id: Id<"messages">;
   isCompact?: boolean;
   isEditing?: boolean;
+  hideThreadButton?: boolean;
   isAuthor: boolean;
   setEditingId: (id: Id<"messages"> | null) => void;
   body: Doc<"messages">["body"];
@@ -55,9 +57,12 @@ export const Message = ({
   setEditingId,
   isEditing,
   isAuthor,
+  hideThreadButton,
   reactions,
 }: MessageProps) => {
   const avatarFallback = userName?.charAt(0).toUpperCase() ?? "U";
+
+  const { openMessage } = usePanel();
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete message?",
     "This will remove the message permanently."
@@ -138,9 +143,9 @@ export const Message = ({
             <Toolbar
               isAuthor={isAuthor}
               isPending={isPending}
-              hideThreadButton={false}
+              hideThreadButton={hideThreadButton}
               onEdit={() => setEditingId(id)}
-              onThread={() => null}
+              onThread={() => openMessage(id)}
               onDelete={handleRemove}
               onReaction={handleReaction}
             />
@@ -203,7 +208,7 @@ export const Message = ({
         <Toolbar
           isAuthor={isAuthor}
           isPending={isPending}
-          hideThreadButton={false}
+          hideThreadButton={hideThreadButton}
           onEdit={() => setEditingId(id)}
           onThread={() => null}
           onDelete={handleRemove}

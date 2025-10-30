@@ -1,5 +1,7 @@
-import { Toaster } from "sonner";
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 import localFont from "next/font/local";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
@@ -37,13 +39,15 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <ConvexClientProvider>
-            <ReactQueryProvider>
-              <JotaiProvider>
-                <Toaster />
-                <Modals />
-                {children}
-              </JotaiProvider>
-            </ReactQueryProvider>
+            <NuqsAdapter>
+              <ReactQueryProvider>
+                <JotaiProvider>
+                  <Toaster />
+                  <Modals />
+                  {children}
+                </JotaiProvider>
+              </ReactQueryProvider>
+            </NuqsAdapter>
           </ConvexClientProvider>
         </body>
       </html>
