@@ -8,6 +8,7 @@ import { Id } from "../../convex/_generated/dataModel";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { Loader } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface MessageListProps {
   memberName?: string;
@@ -64,15 +65,22 @@ export const MessageList = ({
   );
 
   return (
-    <div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto messages-scrollbar">
+    <div
+      className={cn(
+        "flex-1 flex flex-col-reverse pb-4  messages-scrollbar",
+        variant !== "thread" && "overflow-y-auto"
+      )}
+    >
       {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
         <div key={dateKey}>
-          <div className="text-center my-2 relative">
-            <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />
-            <span className="relative bg-white px-4 py-1 border border-gray-300 rounded-full text-xs shadow-sm font-medium">
-              {formatDateLabel(dateKey)}
-            </span>
-          </div>
+          {variant !== "thread" && (
+            <div className="text-center my-2 relative">
+              <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />
+              <span className="relative bg-white px-4 py-1 border border-gray-300 rounded-full text-xs shadow-sm font-medium">
+                {formatDateLabel(dateKey)}
+              </span>
+            </div>
+          )}
           {messages.map((message, index) => {
             const prevMessage = messages[index - 1];
 

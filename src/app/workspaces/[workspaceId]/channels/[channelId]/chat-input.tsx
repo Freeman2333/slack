@@ -6,14 +6,16 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useChannelId } from "@/features/channels/hooks/use-workspace-id";
 import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-url";
 import { toast } from "sonner";
+import { Id } from "../../../../../../convex/_generated/dataModel";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
 interface ChatInputProps {
   placeholder: string;
+  parentMessageId?: Id<"messages">;
 }
 
-export const ChatInput = ({ placeholder }: ChatInputProps) => {
+export const ChatInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
   const editorRef = useRef<Quill | null>(null);
   const workspaceId = useWorkspaceId();
   const channelId = useChannelId();
@@ -58,6 +60,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         ...((image && { image: storageId }) || {}),
         channelId,
         workspaceId,
+        parentMessageId,
       });
     } catch (error) {
       toast.error("Failed to send message.");

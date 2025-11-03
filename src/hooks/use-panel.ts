@@ -13,7 +13,7 @@ export const usePanel = () => {
   };
 
   return {
-    parentMessageId,
+    parentMessageId: parentMessageId as Id<"messages"> | undefined,
     openMessage,
     closeMessage,
   };

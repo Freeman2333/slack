@@ -210,7 +210,7 @@ export const Message = ({
           isPending={isPending}
           hideThreadButton={hideThreadButton}
           onEdit={() => setEditingId(id)}
-          onThread={() => null}
+          onThread={() => openMessage(id)}
           onDelete={handleRemove}
           onReaction={handleReaction}
         />
