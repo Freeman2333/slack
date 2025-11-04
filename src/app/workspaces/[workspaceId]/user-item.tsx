@@ -34,7 +34,7 @@ export const UserItem = ({ name, image, variant, id }: UserItemProps) => {
   return (
     <Button className={cn(userItemVariants({ variant }))} variant="transparent">
       <Link
-        href={`/workspace/${workspaceId}/channel/${id}`}
+        href={`/workspaces/${workspaceId}/members/${id}`}
         className="flex gap-2 items-center w-full"
       >
         <Avatar className="size-5 rounded-md hover:opacity-75 transition bg-sky-500">

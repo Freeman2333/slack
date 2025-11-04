@@ -13,10 +13,16 @@ const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 interface ChatInputProps {
   placeholder: string;
   parentMessageId?: Id<"messages">;
+  conversationId?: Id<"conversations">;
 }
 
-export const ChatInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
+export const ChatInput = ({
+  placeholder,
+  parentMessageId,
+  conversationId,
+}: ChatInputProps) => {
   const editorRef = useRef<Quill | null>(null);
+
   const workspaceId = useWorkspaceId();
   const channelId = useChannelId();
 
@@ -61,9 +67,9 @@ export const ChatInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
         channelId,
         workspaceId,
         parentMessageId,
+        conversationId,
       });
-    } catch (error) {
-      toast.error("Failed to send message.");
+    } catch (_) {
     } finally {
       setIsPending(false);
       setEditorKey((prev) => prev + 1);

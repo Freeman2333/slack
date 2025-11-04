@@ -71,7 +71,7 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
 export const create = mutation({
   args: {
     body: v.string(),
-    channelId: v.id("channels"),
+    channelId: v.optional(v.id("channels")),
     image: v.optional(v.id("_storage")),
     workspaceId: v.id("workspaces"),
     parentMessageId: v.optional(v.id("messages")),
