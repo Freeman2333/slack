@@ -108,6 +108,10 @@ export const MessageList = ({
                 isEditing={editingId === message._id}
                 setEditingId={setEditingId}
                 reactions={message.reactions}
+                threadCount={message.threadCount}
+                threadImage={message.threadImage}
+                threadTimestamp={message.threadTimestamp}
+                threadName={message.threadName}
               />
             );
           })}

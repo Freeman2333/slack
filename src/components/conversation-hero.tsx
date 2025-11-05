@@ -12,7 +12,7 @@ export const ConversationHero = ({
   return (
     <div className="mt-[88px] mx-5">
       <div className="flex gap-2 items-center mb-2">
-        <Avatar className="size-12 rounded-md hover:opacity-75 transition bg-sky-500">
+        <Avatar className="size-12">
           <AvatarImage src={memberImage} alt={memberName} />
           <AvatarFallback className="bg-sky-500 text-white">
             {memberName?.charAt(0).toUpperCase() ?? "U"}

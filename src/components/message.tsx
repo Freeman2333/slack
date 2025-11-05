@@ -13,6 +13,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
 import { Reactions } from "./reactions";
 import { usePanel } from "@/hooks/use-panel";
+import Threadbar from "./threadbar";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -36,6 +37,10 @@ interface MessageProps {
       memberIds: Id<"members">[];
     }
   >;
+  threadCount?: number;
+  threadImage?: string;
+  threadTimestamp?: number;
+  threadName?: string;
 }
 
 const formatFullTime = (date: number) => {
@@ -59,6 +64,10 @@ export const Message = ({
   isAuthor,
   hideThreadButton,
   reactions,
+  threadCount,
+  threadImage,
+  threadTimestamp,
+  threadName,
 }: MessageProps) => {
   const avatarFallback = userName?.charAt(0).toUpperCase() ?? "U";
 
@@ -130,13 +139,22 @@ export const Message = ({
               />
             </div>
           ) : (
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full">
               <Renderer body={body} />
               {messageImage && <Thumbnail imageUrl={messageImage} />}
               {updatedAt && (
                 <span className="text-muted-foreground text-xs">(edited)</span>
               )}
               <Reactions data={reactions} onReaction={handleReaction} />
+              {!isEditing && (
+                <Threadbar
+                  threadCount={threadCount}
+                  authorImage={threadImage}
+                  threadTimestamp={threadTimestamp}
+                  authorName={threadName}
+                  onClick={() => openMessage(id)}
+                />
+              )}
             </div>
           )}
           {!isEditing && (
@@ -203,6 +221,15 @@ export const Message = ({
             )
           : null}
         <Reactions data={reactions} onReaction={handleReaction} />
+        {!isEditing && (
+          <Threadbar
+            threadCount={threadCount}
+            authorImage={threadImage}
+            threadTimestamp={threadTimestamp}
+            authorName={threadName}
+            onClick={() => openMessage(id)}
+          />
+        )}
       </div>
       {!isEditing && (
         <Toolbar
