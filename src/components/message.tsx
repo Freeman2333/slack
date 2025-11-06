@@ -29,6 +29,7 @@ interface MessageProps {
   createdAt: Doc<"messages">["_creationTime"];
   updatedAt: Doc<"messages">["updatedAt"];
   messageImage?: string | null;
+  memberId: Id<"members">;
   userName: string;
   userImage?: string;
   reactions: Array<
@@ -59,6 +60,7 @@ export const Message = ({
   messageImage,
   userImage,
   userName,
+  memberId,
   setEditingId,
   isEditing,
   isAuthor,
@@ -71,7 +73,7 @@ export const Message = ({
 }: MessageProps) => {
   const avatarFallback = userName?.charAt(0).toUpperCase() ?? "U";
 
-  const { openMessage } = usePanel();
+  const { openMessage, openProfileMember } = usePanel();
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete message?",
     "This will remove the message permanently."
@@ -181,7 +183,7 @@ export const Message = ({
       )}
     >
       <ConfirmDialog />
-      <button>
+      <button onClick={() => openProfileMember(memberId)}>
         <Avatar>
           <AvatarImage src={userImage} />
           <AvatarFallback>{avatarFallback}</AvatarFallback>
@@ -190,7 +192,7 @@ export const Message = ({
       <div className="flex flex-col w-full">
         <div className="flex gap-2 text-sm">
           <button
-            onClick={() => null}
+            onClick={() => openProfileMember(memberId)}
             className="font-bold hover:underline  text-primary"
           >
             {userName}

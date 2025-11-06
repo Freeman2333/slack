@@ -84,6 +84,7 @@ export const Thread = () => {
           createdAt={message._creationTime}
           updatedAt={message.updatedAt}
           messageImage={message.image}
+          memberId={message.memberId}
           userImage={message.user.image}
           userName={message.user.name!}
           isAuthor={message.memberId === member?._id}

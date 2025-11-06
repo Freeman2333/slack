@@ -11,15 +11,16 @@ import { WorkspaceSidebar } from "./workspace-sidebar";
 import { usePanel } from "@/hooks/use-panel";
 import { Thread } from "@/features/messages/components/thread";
 import { Loader } from "lucide-react";
+import { Profile } from "@/features/members/components/profile";
 
 interface WorkspaceIdLayoutProps {
   children: React.ReactNode;
 }
 
 const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
-  const { parentMessageId } = usePanel();
+  const { parentMessageId, profileMemberId } = usePanel();
 
-  const isPanelOpen = !!parentMessageId;
+  const isPanelOpen = !!parentMessageId || !!profileMemberId;
 
   return (
     <div>
@@ -45,8 +46,10 @@ const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
               <ResizablePanel minSize={20} defaultSize={29}>
                 {parentMessageId ? (
                   <Thread />
+                ) : profileMemberId ? (
+                  <Profile />
                 ) : (
-                  <div className="flex h-ful items-center justify-center">
+                  <div className="flex h-full items-center justify-center">
                     <Loader className="size-5 animate-spin text-muted-foreground" />
                   </div>
                 )}
