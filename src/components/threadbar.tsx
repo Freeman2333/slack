@@ -35,13 +35,13 @@ const Threadbar = ({
       <span className="text-xs font-semibold text-link  hover:underline">
         {threadCount} {threadCount === 1 ? "reply" : "replies"}
       </span>
-      <span className="text-xs text-muted-foreground group-hover/thread-bar:hidden">
+      <span className="text-xs text-muted-foreground group-hover/thread-bar:hidden transition">
         Last reply {threadTimestamp ? formatDistanceToNow(threadTimestamp) : ""}
       </span>
-      <span className="text-xs text-muted-foreground group-hover/thread-bar:block hidden">
+      <span className="text-xs text-muted-foreground group-hover/thread-bar:block hidden transition">
         View thread
       </span>
-      <ChevronRight className="ml-auto size-4 text-muted-foreground group-hover/thread-bar:block hidden" />
+      <ChevronRight className="ml-auto size-4 text-muted-foreground group-hover/thread-bar:block hidden transition" />
     </button>
   );
 };
