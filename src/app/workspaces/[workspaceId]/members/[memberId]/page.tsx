@@ -10,10 +10,12 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { ChatInput } from "../../channels/[channelId]/chat-input";
 import { useGetMessages } from "@/features/messages/api/use-get-messages";
 import { MessageList } from "@/components/message-list";
+import { usePanel } from "@/hooks/use-panel";
 
 const MemberPage = () => {
   const memberId = useMemberId();
   const workspaceId = useWorkspaceId();
+  const { openProfileMember } = usePanel();
 
   const { member, isLoading: isMemberLoading } = useGetMember({
     memberId,
@@ -30,6 +32,10 @@ const MemberPage = () => {
     status,
     loadMore: loadMoreMessages,
   } = useGetMessages({ conversationId });
+
+  const onOpenProfile = () => {
+    openProfileMember(memberId);
+  };
 
   useEffect(() => {
     mutate({
@@ -63,6 +69,7 @@ const MemberPage = () => {
       <ConversationHeader
         memberName={member.user.name}
         memberImage={member.user.image}
+        onOpenProfile={onOpenProfile}
       />
       <MessageList
         variant="conversation"

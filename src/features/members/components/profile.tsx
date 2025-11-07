@@ -11,7 +11,6 @@ export const Profile = () => {
   const { member, isLoading: isMemberLoading } = useGetMember({
     memberId: profileMemberId!,
   });
-  console.log({ member });
 
   if (isMemberLoading) {
     return (

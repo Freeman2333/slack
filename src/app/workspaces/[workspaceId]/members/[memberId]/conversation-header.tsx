@@ -5,15 +5,22 @@ import { Button } from "@/components/ui/button";
 interface ConversationHeaderProps {
   memberName?: string;
   memberImage?: string;
+  onOpenProfile: () => void;
 }
 
 export const ConversationHeader = ({
   memberName,
   memberImage,
+  onOpenProfile,
 }: ConversationHeaderProps) => {
   return (
     <div className="px-4 py-2 border-b">
-      <Button className="font-bold text-lg flex" variant="ghost" size="sm">
+      <Button
+        onClick={onOpenProfile}
+        className="font-bold text-lg flex"
+        variant="ghost"
+        size="sm"
+      >
         <Avatar className="size-6">
           <AvatarImage src={memberImage} alt={memberName} />
           <AvatarFallback className="bg-sky-500 text-white">
