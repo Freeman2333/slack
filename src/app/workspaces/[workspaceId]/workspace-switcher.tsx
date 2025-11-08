@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 export const WorkspaceSwitcher = () => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
-  const [_isOpen, setIsOpen] = useCreateWorkspaceModal();
+  const [, setIsOpen] = useCreateWorkspaceModal();
 
   const { isLoading: isLoadingWorkspace, workspace: currentWorkspace } =
     useGetWorkspace({

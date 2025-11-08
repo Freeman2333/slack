@@ -36,7 +36,7 @@ export const WorkspaceSidebar = () => {
     id: workspaceId,
   });
 
-  const [_isOpen, setIsChannelModalOpen] = useCreateChannelModal();
+  const [, setIsChannelModalOpen] = useCreateChannelModal();
 
   if (
     isLoadingMember ||

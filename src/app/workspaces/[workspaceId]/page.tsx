@@ -20,7 +20,7 @@ const WorkspaceIdPage = () => {
   });
   const { isLoading: isLoadingMember, member } = useCurrentMember(workspaceId);
 
-  const [_isOpen, setIsChannelModalOpen] = useCreateChannelModal();
+  const [, setIsChannelModalOpen] = useCreateChannelModal();
 
   const isAdmin = member?.role === "admin";
   const isAnyLoading = isLoading || isLoadingChannels || isLoadingMember;
